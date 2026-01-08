@@ -1,9 +1,12 @@
-FROM richarvey/nginx-php-fpm:latest
+FROM richarvey/nginx-php-fpm:8.2
 
-COPY . /var/www/html
 WORKDIR /var/www/html
 
-RUN composer install --no-dev --optimize-autoloader || true
-RUN php artisan key:generate || true
+COPY . .
 
-RUN chown -R www-data:www-data /var/www/html
+ENV WEBROOT=/var/www/html/public
+
+RUN chown -R nginx:nginx /var/www/html \
+    && chmod -R 755 /var/www/html/storage
+
+EXPOSE 80
